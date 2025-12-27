@@ -32,14 +32,6 @@ export default function Discover() {
   
   // Marker coordinates
   const markerCoordinates: [number, number] = [124.325192, 13.559582]
-  
-  // Target camera position when marker is clicked - ABSOLUTE position
-  const targetCameraPosition = {
-    center: [124.325336, 13.559603] as [number, number],
-    zoom: 19.79,
-    bearing: 0.0,
-    pitch: 60.0
-  }
 
   // Initialize the map
   useEffect(() => {
@@ -113,36 +105,8 @@ export default function Discover() {
           
           markerRef.current = marker
           
-          // Add click handler to marker
+          // Add click handler to marker - only open sidebar, no camera animation
           markerElement.addEventListener('click', () => {
-            // Animate camera to target position with terrain consideration
-            if (mapInstance) {
-              // First, animate to the position
-              mapInstance.easeTo({
-                center: targetCameraPosition.center,
-                zoom: targetCameraPosition.zoom,
-                bearing: targetCameraPosition.bearing,
-                pitch: targetCameraPosition.pitch,
-                duration: 2000,
-                easing: (t) => t * (2 - t) // ease-out quadratic
-              })
-              
-              // After animation completes, force exact zoom if terrain affected it
-              mapInstance.once('moveend', () => {
-                // Small delay to let terrain settle
-                setTimeout(() => {
-                  if (mapInstance) {
-                    const currentZoom = mapInstance.getZoom()
-                    // If zoom is off by more than 0.01, correct it
-                    if (Math.abs(currentZoom - targetCameraPosition.zoom) > 0.01) {
-                      mapInstance.setZoom(targetCameraPosition.zoom)
-                    }
-                  }
-                }, 100)
-              })
-            }
-            
-            // Open sidebar
             setIsSidebarOpen(true)
           })
         }

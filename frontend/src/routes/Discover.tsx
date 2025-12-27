@@ -33,7 +33,7 @@ export default function Discover() {
   // Marker coordinates
   const markerCoordinates: [number, number] = [124.325192, 13.559582]
   
-  // Target camera position when marker is clicked
+  // Target camera position when marker is clicked - ABSOLUTE position
   const targetCameraPosition = {
     center: [124.325374, 13.559598] as [number, number],
     zoom: 19.28,
@@ -115,7 +115,8 @@ export default function Discover() {
           
           // Add click handler to marker
           markerElement.addEventListener('click', () => {
-            // Animate camera to target position
+            // Animate camera to ABSOLUTE target position
+            // This will always go to the exact same position regardless of current camera state
             if (mapInstance) {
               mapInstance.flyTo({
                 center: targetCameraPosition.center,
@@ -123,7 +124,9 @@ export default function Discover() {
                 bearing: targetCameraPosition.bearing,
                 pitch: targetCameraPosition.pitch,
                 duration: 2000, // 2 seconds animation
-                essential: true
+                essential: true,
+                // Force absolute positioning - don't calculate relative to current position
+                around: undefined
               })
             }
             

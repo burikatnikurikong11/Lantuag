@@ -10,7 +10,8 @@ export default function CoordinatesTracker({ map }: CoordinatesTrackerProps) {
     latitude: 0,
     longitude: 0,
     bearing: 0,
-    pitch: 0
+    pitch: 0,
+    zoom: 0
   })
 
   useEffect(() => {
@@ -20,12 +21,14 @@ export default function CoordinatesTracker({ map }: CoordinatesTrackerProps) {
       const center = map.getCenter()
       const bearing = map.getBearing()
       const pitch = map.getPitch()
+      const zoom = map.getZoom()
 
       setCoordinates({
         latitude: center.lat,
         longitude: center.lng,
         bearing: bearing,
-        pitch: pitch
+        pitch: pitch,
+        zoom: zoom
       })
     }
 
@@ -61,6 +64,10 @@ export default function CoordinatesTracker({ map }: CoordinatesTrackerProps) {
         <div className="flex justify-between gap-4">
           <span className="text-gray-600 font-semibold">Lng:</span>
           <span className="text-gray-900">{coordinates.longitude.toFixed(6)}°</span>
+        </div>
+        <div className="flex justify-between gap-4">
+          <span className="text-gray-600 font-semibold">Zoom:</span>
+          <span className="text-gray-900">{coordinates.zoom.toFixed(2)}</span>
         </div>
         <div className="flex justify-between gap-4">
           <span className="text-gray-600 font-semibold">Bearing:</span>

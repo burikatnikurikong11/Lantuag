@@ -5,7 +5,7 @@
 export const MAP_CONFIG = {
   DEFAULT_ZOOM: 9.5, // Zoomed out to show entire island of Catanduanes
   DEFAULT_CENTER: [124.25, 13.75] as [number, number], // Center of Catanduanes island
-  DEFAULT_PITCH: 60,
+  DEFAULT_PITCH: 45,
   DEFAULT_BEARING: 0,
   MIN_ZOOM: 10,
   MAX_ZOOM: 22,
@@ -42,4 +42,3 @@ export const UI_CONFIG = {
   TOAST_DURATION_ERROR: 5000,
   LOADING_TIMEOUT: 10000, // milliseconds
 } as const
-

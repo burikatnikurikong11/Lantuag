@@ -7,9 +7,9 @@ import { isViewportInCatanduanes } from '../utils/catanduanesBounds'
 import { getMapTilerKey } from '../utils/env'
 import { useStore } from '../state/store'
 import TouristSpotInfo from '../components/TouristSpotInfo'
+import CoordinatesTracker from '../components/CoordinatesTracker'
 import { MAP_CONFIG, MODEL_CONFIG, ANIMATION_CONFIG, UI_CONFIG } from '../constants/map'
 import { calculateDistanceDegrees } from '../utils/coordinates'
-import PerformanceModeToggle from '../components/PerformanceModeToggle'
 import toast from 'react-hot-toast'
 
 export default function Discover() {
@@ -64,9 +64,7 @@ export default function Discover() {
         canvasContextAttributes: { antialias: true }
       })
       
-      // Add map controls
-      mapInstance.addControl(new maplibregl.NavigationControl(), 'top-right')
-      mapInstance.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left')
+      // Map controls removed - no NavigationControl or ScaleControl
 
       // Handle map errors
       mapInstance.on('error', (e) => {
@@ -301,9 +299,8 @@ export default function Discover() {
       {/* Tourist Spot Info Panel */}
       <TouristSpotInfo spot={selectedSpot} onClose={handleCloseSpotInfo} />
       
-      {/* Performance Mode Toggle - Controls terrain and models */}
-      <PerformanceModeToggle />
+      {/* Coordinates Tracker - Bottom left corner */}
+      <CoordinatesTracker map={map} />
     </div>
   )
 }
-

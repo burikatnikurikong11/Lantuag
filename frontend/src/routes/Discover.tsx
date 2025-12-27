@@ -7,6 +7,7 @@ import { isViewportInCatanduanes } from '../utils/catanduanesBounds'
 import { getMapTilerKey } from '../utils/env'
 import { useStore } from '../state/store'
 import CoordinatesTracker from '../components/CoordinatesTracker'
+import RightSidebar from '../components/RightSidebar'
 import { MAP_CONFIG, MODEL_CONFIG, ANIMATION_CONFIG, UI_CONFIG } from '../constants/map'
 import { calculateDistanceDegrees } from '../utils/coordinates'
 import toast from 'react-hot-toast'
@@ -14,9 +15,11 @@ import toast from 'react-hot-toast'
 export default function Discover() {
   const mapContainer = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
+  const markerRef = useRef<maplibregl.Marker | null>(null)
   const [map, setMap] = useState<maplibregl.Map | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   
   // Store state
   const {
@@ -27,6 +30,8 @@ export default function Discover() {
     modelsEnabled
   } = useStore()
   
+  // Marker coordinates
+  const markerCoordinates: [number, number] = [124.325192, 13.559582]
 
   // Initialize the map
   useEffect(() => {
@@ -76,6 +81,34 @@ export default function Discover() {
         if (loadingTimeout) {
           clearTimeout(loadingTimeout)
           loadingTimeout = null
+        }
+        
+        // Add marker after map loads
+        if (mapInstance) {
+          // Create custom marker element
+          const markerElement = document.createElement('div')
+          markerElement.className = 'custom-marker'
+          markerElement.style.width = '30px'
+          markerElement.style.height = '30px'
+          markerElement.style.cursor = 'pointer'
+          markerElement.innerHTML = `
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#FF5722" stroke="white" stroke-width="2"/>
+              <circle cx="12" cy="9" r="2.5" fill="white"/>
+            </svg>
+          `
+          
+          // Create and add marker
+          const marker = new maplibregl.Marker({ element: markerElement })
+            .setLngLat(markerCoordinates)
+            .addTo(mapInstance)
+          
+          markerRef.current = marker
+          
+          // Add click handler to marker
+          markerElement.addEventListener('click', () => {
+            setIsSidebarOpen(true)
+          })
         }
       })
       
@@ -157,6 +190,10 @@ export default function Discover() {
       if (loadingTimeout) {
         clearTimeout(loadingTimeout)
         loadingTimeout = null
+      }
+      if (markerRef.current) {
+        markerRef.current.remove()
+        markerRef.current = null
       }
       if (mapInstance) {
         mapInstance.remove()
@@ -250,10 +287,11 @@ export default function Discover() {
         </div>
       )}
       
-      {/* Tourist Spot Info Panel removed */}
-      
       {/* Coordinates Tracker - Bottom left corner */}
       <CoordinatesTracker map={map} />
+      
+      {/* Right Sidebar */}
+      <RightSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </div>
   )
 }

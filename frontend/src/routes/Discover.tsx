@@ -115,9 +115,9 @@ export default function Discover() {
           
           // Add click handler to marker
           markerElement.addEventListener('click', () => {
-            // Animate camera to ABSOLUTE target position
+            // Animate camera to target position with terrain consideration
             if (mapInstance) {
-              // Use easeTo for more precise control over final zoom level
+              // First, animate to the position
               mapInstance.easeTo({
                 center: targetCameraPosition.center,
                 zoom: targetCameraPosition.zoom,
@@ -125,6 +125,20 @@ export default function Discover() {
                 pitch: targetCameraPosition.pitch,
                 duration: 2000,
                 easing: (t) => t * (2 - t) // ease-out quadratic
+              })
+              
+              // After animation completes, force exact zoom if terrain affected it
+              mapInstance.once('moveend', () => {
+                // Small delay to let terrain settle
+                setTimeout(() => {
+                  if (mapInstance) {
+                    const currentZoom = mapInstance.getZoom()
+                    // If zoom is off by more than 0.01, correct it
+                    if (Math.abs(currentZoom - targetCameraPosition.zoom) > 0.01) {
+                      mapInstance.setZoom(targetCameraPosition.zoom)
+                    }
+                  }
+                }, 100)
               })
             }
             

@@ -8,7 +8,7 @@ export const MAP_CONFIG = {
   DEFAULT_PITCH: 45,
   DEFAULT_BEARING: 0,
   MIN_ZOOM: 10,
-  MAX_ZOOM: 22,
+  MAX_ZOOM: 19, // Maximum zoom level limited to 19
   MODEL_CLICK_THRESHOLD: 0.001, // degrees (roughly 100m)
   TERRAIN_EXAGGERATION: 1,
   TERRAIN_LOAD_DELAY: 1000, // milliseconds

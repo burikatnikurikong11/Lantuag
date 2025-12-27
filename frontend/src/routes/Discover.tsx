@@ -32,6 +32,14 @@ export default function Discover() {
   
   // Marker coordinates
   const markerCoordinates: [number, number] = [124.325192, 13.559582]
+  
+  // Target camera position when marker is clicked
+  const targetCameraPosition = {
+    center: [124.325374, 13.559598] as [number, number],
+    zoom: 19.28,
+    bearing: 0.0,
+    pitch: 60.0
+  }
 
   // Initialize the map
   useEffect(() => {
@@ -107,6 +115,19 @@ export default function Discover() {
           
           // Add click handler to marker
           markerElement.addEventListener('click', () => {
+            // Animate camera to target position
+            if (mapInstance) {
+              mapInstance.flyTo({
+                center: targetCameraPosition.center,
+                zoom: targetCameraPosition.zoom,
+                bearing: targetCameraPosition.bearing,
+                pitch: targetCameraPosition.pitch,
+                duration: 2000, // 2 seconds animation
+                essential: true
+              })
+            }
+            
+            // Open sidebar
             setIsSidebarOpen(true)
           })
         }

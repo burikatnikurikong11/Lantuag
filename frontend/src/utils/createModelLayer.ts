@@ -211,16 +211,8 @@ export function createModel3DLayer(config: Model3DConfig): Model3DLayer {
         }
       }
       
-      // Add minimum offset to ensure model sits on top of terrain surface
-      // This accounts for models with origin at their base
-      const minimumOffset = terrainElevation > 0 ? 5 : 0 // 5 meters above terrain if terrain exists
-      const finalAltitude = terrainElevation + altitude + minimumOffset
-      
-      // Terrain elevation logging (only in development)
-      if (import.meta.env.DEV && terrainElevation > 0) {
-        // Use proper logging instead of console.log
-        // This can be removed or replaced with a logging utility
-      }
+      // No offset - model positioned exactly at terrain elevation + configured altitude
+      const finalAltitude = terrainElevation + altitude
       
       const modelAsMercatorCoordinate = maplibregl.MercatorCoordinate.fromLngLat(
         modelCoordinates,
@@ -278,4 +270,3 @@ export function createModel3DLayer(config: Model3DConfig): Model3DLayer {
 
   return layer
 }
-

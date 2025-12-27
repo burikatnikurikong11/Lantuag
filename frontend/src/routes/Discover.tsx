@@ -35,8 +35,8 @@ export default function Discover() {
   
   // Target camera position when marker is clicked - ABSOLUTE position
   const targetCameraPosition = {
-    center: [124.325374, 13.559598] as [number, number],
-    zoom: 19.28,
+    center: [124.325336, 13.559603] as [number, number],
+    zoom: 19.79,
     bearing: 0.0,
     pitch: 60.0
   }

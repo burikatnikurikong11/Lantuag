@@ -105,8 +105,20 @@ export default function Discover() {
           
           markerRef.current = marker
           
-          // Add click handler to marker - only open sidebar, no camera animation
+          // Add click handler to marker - zoom to marker center with zoom 19 and bearing 0
           markerElement.addEventListener('click', () => {
+            if (mapInstance) {
+              // Animate to marker position with zoom 19 and bearing 0
+              mapInstance.flyTo({
+                center: markerCoordinates,
+                zoom: 19,
+                bearing: 0,
+                duration: 2000,
+                essential: true
+              })
+            }
+            
+            // Open sidebar
             setIsSidebarOpen(true)
           })
         }

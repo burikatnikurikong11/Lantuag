@@ -1,6 +1,5 @@
 import React, { Suspense, lazy } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import Navigation from './components/Navigation'
 import ToastContainer from './components/ToastContainer'
 import ErrorBoundary from './components/ErrorBoundary'
 
@@ -21,8 +20,6 @@ export default function App(){
         padding: 0
       }}
     >
-      <Navigation />
-
       <ErrorBoundary>
         <Suspense fallback={<div className="p-8 text-center pt-20">Loading...</div>}>
           <div 
@@ -46,4 +43,3 @@ export default function App(){
     </div>
   )
 }
-

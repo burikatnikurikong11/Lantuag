@@ -108,14 +108,27 @@ export default function Discover() {
           // Add click handler to marker - zoom to marker center with zoom 19 and bearing 0
           markerElement.addEventListener('click', () => {
             if (mapInstance) {
-              // Animate to marker position with zoom 19 and bearing 0
-              mapInstance.flyTo({
+              // Use easeTo for more predictable zoom behavior with terrain
+              mapInstance.easeTo({
                 center: markerCoordinates,
-                zoom: 19,
+                zoom: Math.min(MAP_CONFIG.MAX_ZOOM, 19), // Ensure we don't exceed max zoom
                 bearing: 0,
                 duration: 2000,
-                essential: true
+                easing: (t) => t * (2 - t) // ease-out quadratic
               })
+              
+              // Add a listener to enforce zoom limit after animation
+              const enforceZoomLimit = () => {
+                if (mapInstance) {
+                  const currentZoom = mapInstance.getZoom()
+                  if (currentZoom > MAP_CONFIG.MAX_ZOOM) {
+                    mapInstance.setZoom(MAP_CONFIG.MAX_ZOOM)
+                  }
+                }
+              }
+              
+              // Check zoom after animation completes
+              mapInstance.once('moveend', enforceZoomLimit)
             }
             
             // Open sidebar

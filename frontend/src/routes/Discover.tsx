@@ -116,17 +116,15 @@ export default function Discover() {
           // Add click handler to marker
           markerElement.addEventListener('click', () => {
             // Animate camera to ABSOLUTE target position
-            // This will always go to the exact same position regardless of current camera state
             if (mapInstance) {
-              mapInstance.flyTo({
+              // Use easeTo for more precise control over final zoom level
+              mapInstance.easeTo({
                 center: targetCameraPosition.center,
                 zoom: targetCameraPosition.zoom,
                 bearing: targetCameraPosition.bearing,
                 pitch: targetCameraPosition.pitch,
-                duration: 2000, // 2 seconds animation
-                essential: true,
-                // Force absolute positioning - don't calculate relative to current position
-                around: undefined
+                duration: 2000,
+                easing: (t) => t * (2 - t) // ease-out quadratic
               })
             }
             

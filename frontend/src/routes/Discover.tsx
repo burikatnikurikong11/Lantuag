@@ -6,7 +6,6 @@ import { touristSpotModels } from '../config/touristSpots'
 import { isViewportInCatanduanes } from '../utils/catanduanesBounds'
 import { getMapTilerKey } from '../utils/env'
 import { useStore } from '../state/store'
-import TouristSpotInfo from '../components/TouristSpotInfo'
 import CoordinatesTracker from '../components/CoordinatesTracker'
 import { MAP_CONFIG, MODEL_CONFIG, ANIMATION_CONFIG, UI_CONFIG } from '../constants/map'
 import { calculateDistanceDegrees } from '../utils/coordinates'
@@ -21,24 +20,12 @@ export default function Discover() {
   
   // Store state
   const {
-    selectedTouristSpot,
-    setSelectedTouristSpot,
     setMapViewport,
     setLoadingState,
     setError: setStoreError,
     terrainEnabled,
     modelsEnabled
   } = useStore()
-  
-  // Get selected spot data
-  const selectedSpot = useMemo(() => {
-    return touristSpotModels.find(m => m.id === selectedTouristSpot) || null
-  }, [selectedTouristSpot])
-  
-  // Handle closing tourist spot info
-  const handleCloseSpotInfo = useCallback(() => {
-    setSelectedTouristSpot(null)
-  }, [setSelectedTouristSpot])
   
 
   // Initialize the map
@@ -107,40 +94,7 @@ export default function Discover() {
         mapInstance.on('moveend', updateViewport)
         mapInstance.on('zoomend', updateViewport)
         
-        // Handle map clicks for model interaction
-        mapInstance.on('click', (e) => {
-          // Don't handle clicks on controls or UI elements
-          const target = e.originalEvent?.target as HTMLElement
-          if (target?.closest('.maplibregl-ctrl') || 
-              target?.closest('.maplibregl-control-container') ||
-              target?.closest('[style*="z-index: 1000"]') ||
-              target?.closest('[class*="z-[1000]"]')) {
-            return
-          }
-          
-          // Check if click is near any model coordinates
-          const clickedLng = e.lngLat.lng
-          const clickedLat = e.lngLat.lat
-          
-          // Find nearest model within reasonable distance (rough check)
-          for (const model of touristSpotModels) {
-            const distance = calculateDistanceDegrees(
-              [clickedLng, clickedLat],
-              model.coordinates
-            )
-            // If click is within threshold distance, consider it a hit
-            if (distance < MAP_CONFIG.MODEL_CLICK_THRESHOLD && mapInstance) {
-              setSelectedTouristSpot(model.id)
-              // Fly to the model location
-              mapInstance.flyTo({
-                center: model.coordinates,
-                zoom: ANIMATION_CONFIG.DEFAULT_ZOOM_ON_SELECT,
-                duration: 1000
-              })
-              break
-            }
-          }
-        })
+        // Map click handler removed - no interaction with models
       }
 
       // Fallback: clear loading state after a timeout if load event doesn't fire
@@ -296,8 +250,7 @@ export default function Discover() {
         </div>
       )}
       
-      {/* Tourist Spot Info Panel */}
-      <TouristSpotInfo spot={selectedSpot} onClose={handleCloseSpotInfo} />
+      {/* Tourist Spot Info Panel removed */}
       
       {/* Coordinates Tracker - Bottom left corner */}
       <CoordinatesTracker map={map} />
